@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book extends Resource {
+public class Magazine extends Resource {
 
-    private String isbn;
-    private Integer pageCount;
-    private Publisher publisher;
+    private String issn;
+    private Integer volume;
+    private Integer number;
 
 }
