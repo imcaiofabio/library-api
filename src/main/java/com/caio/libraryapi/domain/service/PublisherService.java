@@ -1,40 +1,37 @@
 package com.caio.libraryapi.domain.service;
 
 import com.caio.libraryapi.domain.model.Publisher;
+import com.caio.libraryapi.domain.repository.PublisherRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class PublisherService implements CrudService<Publisher, Long> {
 
-    private final Map<Long, Publisher> publishers = new ConcurrentHashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(0);
+    private final PublisherRepository publisherRepository;
+
+    public PublisherService(PublisherRepository publisherRepository) {
+        this.publisherRepository = publisherRepository;
+    }
 
     @Override
     public Publisher save(Publisher publisher) {
-        if (publisher.getId() == null) {
-            publisher.setId(idGenerator.incrementAndGet());
-        }
-        publishers.put(publisher.getId(), publisher);
-        return publisher;
+        return publisherRepository.save(publisher);
     }
 
     @Override
     public Publisher findById(Long id) {
-        return publishers.get(id);
+        return publisherRepository.findById(id).orElse(null);
     }
 
     @Override
     public void deleteById(Long id) {
-        publishers.remove(id);
+        publisherRepository.deleteById(id);
     }
 
     @Override
     public Collection<Publisher> findAll() {
-        return publishers.values();
+        return publisherRepository.findAll();
     }
 }

@@ -1,40 +1,37 @@
 package com.caio.libraryapi.domain.service;
 
 import com.caio.libraryapi.domain.model.Book;
+import com.caio.libraryapi.domain.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class BookService implements CrudService<Book, Long> {
 
-    private final Map<Long, Book> books = new ConcurrentHashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(0);
+    private final BookRepository bookRepository;
+
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public Book save(Book book) {
-        if (book.getId() == null) {
-            book.setId(idGenerator.incrementAndGet());
-        }
-        books.put(book.getId(), book);
-        return book;
+        return bookRepository.save(book);
     }
 
     @Override
     public Book findById(Long id) {
-        return books.get(id);
+        return bookRepository.findById(id).orElse(null);
     }
 
     @Override
     public void deleteById(Long id) {
-        books.remove(id);
+        bookRepository.deleteById(id);
     }
 
     @Override
     public Collection<Book> findAll() {
-        return books.values();
+        return bookRepository.findAll();
     }
 }
