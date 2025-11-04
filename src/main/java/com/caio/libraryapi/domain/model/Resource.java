@@ -17,7 +17,6 @@ public abstract class Resource {
     private Long id;
 
     private String title;
-    private String author;
     private Integer publicationYear;
 
 }

@@ -16,5 +16,6 @@ public class Magazine extends Resource {
     private String issn;
     private Integer volume;
     private Integer number;
+    private String author;
 
 }

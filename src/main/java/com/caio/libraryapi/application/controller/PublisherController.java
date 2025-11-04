@@ -3,6 +3,7 @@ package com.caio.libraryapi.application.controller;
 import com.caio.libraryapi.application.request.PublisherRequest;
 import com.caio.libraryapi.domain.model.Publisher;
 import com.caio.libraryapi.domain.service.PublisherService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class PublisherController {
     }
 
     @PostMapping
-    public ResponseEntity<Publisher> create(@RequestBody PublisherRequest request) {
+    public ResponseEntity<Publisher> create(@Valid @RequestBody PublisherRequest request) {
         var publisher = new Publisher(null, request.getName(), request.getCity());
         var savedPublisher = publisherService.save(publisher);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPublisher);
@@ -38,7 +39,7 @@ public class PublisherController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Publisher> update(@PathVariable Long id, @RequestBody PublisherRequest request) {
+    public ResponseEntity<Publisher> update(@PathVariable Long id, @Valid @RequestBody PublisherRequest request) {
         var publisher = new Publisher(id, request.getName(), request.getCity());
         var updatedPublisher = publisherService.save(publisher);
         return ResponseEntity.ok(updatedPublisher);

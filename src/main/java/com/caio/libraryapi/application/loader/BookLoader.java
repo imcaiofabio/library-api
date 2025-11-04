@@ -1,6 +1,7 @@
 package com.caio.libraryapi.application.loader;
 
 import com.caio.libraryapi.domain.model.Book;
+import com.caio.libraryapi.domain.service.AuthorService;
 import com.caio.libraryapi.domain.service.BookService;
 import com.caio.libraryapi.domain.service.PublisherService;
 import org.springframework.boot.ApplicationArguments;
@@ -13,15 +14,17 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 @Component
-@Order(2) // Ensures this runs after PublisherLoader
+@Order(3)
 public class BookLoader implements ApplicationRunner {
 
     private final BookService bookService;
     private final PublisherService publisherService;
+    private final AuthorService authorService;
 
-    public BookLoader(BookService bookService, PublisherService publisherService) {
+    public BookLoader(BookService bookService, PublisherService publisherService, AuthorService authorService) {
         this.bookService = bookService;
         this.publisherService = publisherService;
+        this.authorService = authorService;
     }
 
     @Override
@@ -36,20 +39,23 @@ public class BookLoader implements ApplicationRunner {
             reader.lines().forEach(line -> {
                 var fields = line.split(",");
                 if (fields.length == 6) {
-                    var publisherId = Long.parseLong(fields[5]);
-                    var publisher = publisherService.findById(publisherId);
+                    var publisherId = Long.parseLong(fields[4]);
+                    var authorId = Long.parseLong(fields[5]);
 
-                    if (publisher != null) {
+                    var publisher = publisherService.findById(publisherId);
+                    var author = authorService.findById(authorId);
+
+                    if (publisher != null && author != null) {
                         var book = new Book();
                         book.setTitle(fields[0]);
-                        book.setAuthor(fields[1]);
-                        book.setPublicationYear(Integer.parseInt(fields[2]));
-                        book.setIsbn(fields[3]);
-                        book.setPageCount(Integer.parseInt(fields[4]));
+                        book.setPublicationYear(Integer.parseInt(fields[1]));
+                        book.setIsbn(fields[2]);
+                        book.setPageCount(Integer.parseInt(fields[3]));
                         book.setPublisher(publisher);
+                        book.setAuthor(author);
                         bookService.save(book);
                     } else {
-                        System.out.println("Publisher not found for ID: " + publisherId);
+                        System.out.println("Publisher or Author not found for book: " + fields[0]);
                     }
                 }
             });

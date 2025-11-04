@@ -1,5 +1,6 @@
 package com.caio.libraryapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -19,5 +20,9 @@ public class Book extends Resource {
 
     @ManyToOne
     private Publisher publisher;
+
+    @ManyToOne
+    @JsonBackReference
+    private Author author;
 
 }

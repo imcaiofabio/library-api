@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class PublisherRequest {
+public class AuthorRequest {
 
     @NotBlank
     @Size(max = 255)
@@ -13,6 +13,6 @@ public class PublisherRequest {
 
     @NotBlank
     @Size(max = 255)
-    private String city;
+    private String nationality;
 
 }
